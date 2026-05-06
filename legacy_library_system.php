@@ -1,7 +1,20 @@
 <?php
 class lib_sys{
-public $db_h="localhost"; public $db_u="root"; public $db_p=""; public $db_n="library_db";
-public $conn; public $fine_rate=5;
+
+    private $host = "localhost";
+    private $user = "root";
+    private $pass = "";
+    private $db = "library_db";
+    private mysqli $conn;
+    
+        private const FINE_RATE = 5;
+    private const STATUS_BORROWED = 'borrowed';
+    private const STATUS_RETURNED = 'returned';
+
+
+public $conn; 
+
+public $fine_rate=5;
 function connect(){
 $this->conn=new mysqli($this->db_h,$this->db_u,$this->db_p,$this->db_n);
 if($this->conn->connect_error){die("db error");}}
