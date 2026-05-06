@@ -1,5 +1,5 @@
 <?php
-class lib_sys{
+class Library_System{
 public $db_h="localhost"; public $db_u="root"; public $db_p=""; public $db_n="library_db";
 public $conn; public $fine_rate=5;
 function connect(){
