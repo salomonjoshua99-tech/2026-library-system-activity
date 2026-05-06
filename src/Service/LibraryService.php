@@ -1,22 +1,31 @@
 <?php
+require_once "BorrowRepository.php";
 
-declare(strict_types=1);
+class LibraryService {
+    private $borrowRepo;
+    private $fineRate = 5;
 
-namespace App\Library;
+    public function __construct() {
+        $this->borrowRepo = new BorrowRepository();
+    }
 
-use DateTime;
+    public function borrowBook($student_id, $book_id, $days) {
+        $borrow_date = date('Y-m-d');
+        $due_date = date('Y-m-d', strtotime("+$days days"));
+        return $this->borrowRepo->borrow($student_id, $book_id, $borrow_date, $due_date);
+    }
 
-class LibraryService
-{
-    public const DAILY_FINE_RATE = 5.0;
+    public function returnBook($record_id) {
+        $record = $this->borrowRepo->getRecord($record_id);
 
-    public function calculateFine(string $dueDate): float
-    {
-        $today = new DateTime();
-        $due = new DateTime($dueDate);
+        $due = strtotime($record['due_date']);
+        $today = strtotime(date('Y-m-d'));
 
-        $diff = $today->diff($due)->format('%r%a');
+        $daysLate = max(0, ($today - $due) / 86400);
+        $fine = $daysLate * $this->fineRate;
 
-        return ($diff < 0) ? abs((int)$diff) * self::DAILY_FINE_RATE : 0.0;
+        $this->borrowRepo->returnBook($record_id, date('Y-m-d'), $fine);
+        return $fine;
     }
 }
+?>

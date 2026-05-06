@@ -1,22 +1,17 @@
 <?php
+class Book {
+    public $id;
+    public $title;
+    public $author;
+    public $year;
+    public $genre;
 
-declare(strict_types=1);
-
-namespace App\Library;
-
-class Book
-{
-    public function __construct(
-        private ?int $id,
-        private string $title,
-        private string $author,
-        private int $year,
-        private string $genre
-    ) {
+    public function __construct($title, $author, $year, $genre, $id = null) {
+        $this->id = $id;
+        $this->title = $title;
+        $this->author = $author;
+        $this->year = $year;
+        $this->genre = $genre;
     }
-
-    public function getTitle(): string { return $this->title; }
-    public function getAuthor(): string { return $this->author; }
-    public function getYear(): int { return $this->year; }
-    public function getGenre(): string { return $this->genre; }
 }
+?>

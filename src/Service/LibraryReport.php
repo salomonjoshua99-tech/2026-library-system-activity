@@ -1,24 +1,21 @@
 <?php
+require_once "DatabaseConnection.php";
 
-declare(strict_types=1);
+class LibraryReport {
+    private $conn;
 
-namespace App\Library;
-
-class LibraryReport
-{
-    public function __construct(private DatabaseConnection $db)
-    {
+    public function __construct() {
+        $db = new DatabaseConnection();
+        $this->conn = $db->connect();
     }
 
-    public function generate(): array
-    {
-        $conn = $this->db->getConnection();
-
+    public function getStats() {
         return [
-            'totalBooks' => $conn->query("SELECT COUNT(*) as c FROM books")->fetch_assoc()['c'],
-            'borrowed' => $conn->query("SELECT COUNT(*) as c FROM borrow_records WHERE status='borrowed'")->fetch_assoc()['c'],
-            'returned' => $conn->query("SELECT COUNT(*) as c FROM borrow_records WHERE status='returned'")->fetch_assoc()['c'],
-            'fines' => $conn->query("SELECT SUM(fine_amount) as s FROM borrow_records")->fetch_assoc()['s'],
+            "books" => $this->conn->query("SELECT COUNT(*) c FROM books")->fetch_assoc()['c'],
+            "borrowed" => $this->conn->query("SELECT COUNT(*) c FROM borrow_records WHERE status='borrowed'")->fetch_assoc()['c'],
+            "returned" => $this->conn->query("SELECT COUNT(*) c FROM borrow_records WHERE status='returned'")->fetch_assoc()['c'],
+            "fines" => $this->conn->query("SELECT SUM(fine_amount) s FROM borrow_records")->fetch_assoc()['s']
         ];
     }
 }
+?>

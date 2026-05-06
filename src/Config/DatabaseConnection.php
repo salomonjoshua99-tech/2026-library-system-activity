@@ -1,27 +1,16 @@
 <?php
+class DatabaseConnection {
+    private $host = "localhost";
+    private $user = "root";
+    private $pass = "";
+    private $dbname = "library_db";
 
-class DatabaseConnection
-{
-    private string $host = "localhost";
-    private string $user = "root";
-    private string $pass = "";
-    private string $db = "library_db";
-
-    public mysqli $conn;
-
-    public function connect(): mysqli
-    {
-        $this->conn = new mysqli(
-            $this->host,
-            $this->user,
-            $this->pass,
-            $this->db
-        );
-
-        if ($this->conn->connect_error) {
-            die("db error");
+    public function connect() {
+        $conn = new mysqli($this->host, $this->user, $this->pass, $this->dbname);
+        if ($conn->connect_error) {
+            die("Database connection failed");
         }
-
-        return $this->conn;
+        return $conn;
     }
 }
+?>

@@ -1,62 +1,33 @@
 <?php
+require_once "DatabaseConnection.php";
+require_once "Book.php";
 
-declare(strict_types=1);
+class BookRepository {
+    private $conn;
 
-namespace App\Library;
-
-class BookRepository
-{
-    public function __construct(private DatabaseConnection $db) {}
-
-    public function addBook(Book $book): int
-    {
-        $conn = $this->db->getConnection();
-
-        $stmt = $conn->prepare(
-            "INSERT INTO books (title, author, year, genre) VALUES (?, ?, ?, ?)"
-        );
-
-        $stmt->bind_param(
-            "ssis",
-            $book->getTitle(),
-            $book->getAuthor(),
-            $book->getYear(),
-            $book->getGenre()
-        );
-
-        $stmt->execute();
-
-        return $conn->insert_id;
+    public function __construct() {
+        $db = new DatabaseConnection();
+        $this->conn = $db->connect();
     }
 
-    public function findById(int $id): ?array
-    {
-        $conn = $this->db->getConnection();
-
-        $stmt = $conn->prepare(
-            "SELECT * FROM books WHERE book_id = ?"
-        );
-
-        $stmt->bind_param("i", $id);
+    public function add(Book $book) {
+        $stmt = $this->conn->prepare("INSERT INTO books(title, author, year, genre) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssis", $book->title, $book->author, $book->year, $book->genre);
         $stmt->execute();
-
-        $result = $stmt->get_result()->fetch_assoc();
-
-        return $result ?: null;
+        return $this->conn->insert_id;
     }
 
-    public function findAll(): array
-    {
-        $conn = $this->db->getConnection();
+    public function getAll() {
+        $result = $this->conn->query("SELECT * FROM books");
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
 
-        $result = $conn->query("SELECT * FROM books");
-
-        $books = [];
-
-        while ($row = $result->fetch_assoc()) {
-            $books[] = $row;
-        }
-
-        return $books;
+    public function search($keyword) {
+        $stmt = $this->conn->prepare("SELECT * FROM books WHERE title LIKE ? OR author LIKE ?");
+        $kw = "%$keyword%";
+        $stmt->bind_param("ss", $kw, $kw);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 }
+?>

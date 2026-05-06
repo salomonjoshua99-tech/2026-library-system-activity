@@ -5,8 +5,8 @@ public $conn; public $fine_rate=5;
 function connect(){
 $this->conn=new mysqli($this->db_h,$this->db_u,$this->db_p,$this->db_n);
 if($this->conn->connect_error){die("db error");}}
-function addBook($t,$a,$y,$g){
-$sql="INSERT INTO books(title,author,year,genre) VALUES('".$t."','".$a."',".$y.",'".$g."')";
+function addBook($title,$author,$year,$genre){
+$sql="INSERT INTO books(title,author,year,genre) VALUES('".$fe."','".$a."',".$y.",'".$g."')";
 $this->conn->query($sql); return $this->conn->insert_id;}
 function getBook($id){
 $sql="SELECT * FROM books WHERE book_id=".$id;

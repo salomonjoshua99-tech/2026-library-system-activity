@@ -1,26 +1,38 @@
 <?php
+require_once "BookRepository.php";
+require_once "LibraryService.php";
+require_once "LibraryReport.php";
+require_once "HtmlRenderer.php";
 
-declare(strict_types=1);
+$bookRepo = new BookRepository();
+$service = new LibraryService();
+$report = new LibraryReport();
 
-use App\Library\DatabaseConnection;
-use App\Library\Book;
-use App\Library\BookRepository;
+$action = $_GET['act'] ?? '';
 
-require 'vendor/autoload.php';
-
-$db = new DatabaseConnection();
-$db->connect();
-
-$bookRepo = new BookRepository($db);
-
-if ($_GET['act'] ?? '' === 'add') {
-    $book = new Book(
-        null,
-        $_POST['t'],
-        $_POST['a'],
-        (int) $_POST['y'],
-        $_POST['g']
-    );
-
-    $bookRepo->addBook($book);
+if ($action == "add") {
+    $book = new Book($_POST['t'], $_POST['a'], $_POST['y'], $_POST['g']);
+    $bookRepo->add($book);
+    echo "Book added!";
 }
+
+elseif ($action == "list") {
+    $books = $bookRepo->getAll();
+    HtmlRenderer::renderBooks($books);
+}
+
+elseif ($action == "borrow") {
+    $service->borrowBook($_POST['sid'], $_POST['bid'], $_POST['days']);
+    echo "Book borrowed!";
+}
+
+elseif ($action == "return") {
+    $fine = $service->returnBook($_POST['rid']);
+    echo "Returned. Fine: $fine";
+}
+
+elseif ($action == "report") {
+    $stats = $report->getStats();
+    HtmlRenderer::renderReport($stats);
+}
+?>
