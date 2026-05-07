@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Library\Repository;
@@ -22,7 +23,7 @@ class BorrowRepository
              VALUES (?, ?, ?, ?, "borrowed")'
         );
 
-        $stmt->bind_param('iiss', $sid, $bid, $borrowDate, $dueDate);
+        $stmt->bind_param('iiss', $studentid, $bookid, $borrowDate, $dueDate);
 
         return $stmt->execute();
     }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Library\Service;
@@ -15,17 +16,17 @@ class LibraryService
         $this->borrowRepo = new BorrowRepository();
     }
 
-    public function borrowBook(int $sid, int $bid, int $days): bool
+    public function borrowBook(int $studentid, int $bookid, int $days): bool
     {
         $borrowDate = date('Y-m-d');
         $dueDate = date('Y-m-d', strtotime('+' . $days . ' days'));
 
-        return $this->borrowRepo->borrow($sid, $bid, $borrowDate, $dueDate);
+        return $this->borrowRepo->borrow($studentid, $bookid, $borrowDate, $dueDate);
     }
 
-    public function returnBook(int $rid): float
+    public function returnBook(int $recordid): float
     {
-        $record = $this->borrowRepo->get($rid);
+        $record = $this->borrowRepo->get($studentid);
 
         $due = strtotime($record['due_date']);
         $today = strtotime(date('Y-m-d'));
@@ -33,7 +34,7 @@ class LibraryService
         $daysLate = max(0, ($today - $due) / 86400);
         $fine = $daysLate * LibraryConfig::FINE_RATE;
 
-        $this->borrowRepo->returnBook($rid, date('Y-m-d'), $fine);
+        $this->borrowRepo->returnBook($studentid, date('Y-m-d'), $fine);
 
         return $fine;
     }
