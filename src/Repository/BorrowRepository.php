@@ -46,7 +46,10 @@ class BorrowRepository
     }
     public function get(int $id): array
     {
-        $result = $this->conn->query('SELECT * FROM borrow_records WHERE record_id = ' . $id);
+        $stmt = $this->conn->prepare('SELECT * FROM borrow_records WHERE record_id = ?');
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
         return $result->fetch_assoc();
     }
