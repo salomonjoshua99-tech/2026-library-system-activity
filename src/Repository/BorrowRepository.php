@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Library\Repository;
 
 use mysqli;
+use RuntimeException;
+use InvalidArgumentException;
 use App\Library\Config\DatabaseConnection;
 
 class BorrowRepository
@@ -18,16 +20,30 @@ class BorrowRepository
 
     public function borrow(int $studentid, int $bookid, string $borrowDate, string $dueDate): bool
     {
+        if ($studentid <= 0) {
+            throw new InvalidArgumentException('Invalid student ID: ' . $studentid);
+        }
+        if ($bookid <= 0) {
+            throw new InvalidArgumentException('Invalid book ID: ' . $bookid);
+        }
+
         $stmt = $this->conn->prepare(
             'INSERT INTO borrow_records (student_id, book_id, borrow_date, due_date, status)
-             VALUES (?, ?, ?, ?, "borrowed")'
+         VALUES (?, ?, ?, ?, "borrowed")'
         );
+
+        if (!$stmt) {
+            throw new RuntimeException('Failed to prepare borrow statement: ' . $this->conn->error);
+        }
 
         $stmt->bind_param('iiss', $studentid, $bookid, $borrowDate, $dueDate);
 
-        return $stmt->execute();
-    }
+        if (!$stmt->execute()) {
+            throw new RuntimeException('Failed to create borrow record: ' . $stmt->error);
+        }
 
+        return true;
+    }
     public function get(int $id): array
     {
         $result = $this->conn->query('SELECT * FROM borrow_records WHERE record_id = ' . $id);
