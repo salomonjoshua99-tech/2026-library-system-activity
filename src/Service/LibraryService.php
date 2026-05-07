@@ -26,15 +26,16 @@ class LibraryService
 
     public function returnBook(int $recordid): float
     {
-        $record = $this->borrowRepo->get($studentid);
-
+        $record = $this->borrowRepo->get($recordid);
         $due = strtotime($record['due_date']);
         $today = strtotime(date('Y-m-d'));
 
         $daysLate = max(0, ($today - $due) / 86400);
         $fine = $daysLate * LibraryConfig::FINE_RATE;
 
-        $this->borrowRepo->returnBook($studentid, date('Y-m-d'), $fine);
+        $this->borrowRepo->returnBook($recordid, date('Y-m-d'), $fine);
+
+
 
         return $fine;
     }

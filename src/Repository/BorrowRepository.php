@@ -16,7 +16,7 @@ class BorrowRepository
         $this->conn = DatabaseConnection::connect();
     }
 
-    public function borrow(int $sid, int $bid, string $borrowDate, string $dueDate): bool
+    public function borrow(int $studentid, int $bookid, string $borrowDate, string $dueDate): bool
     {
         $stmt = $this->conn->prepare(
             'INSERT INTO borrow_records (student_id, book_id, borrow_date, due_date, status)
@@ -45,5 +45,15 @@ class BorrowRepository
         $stmt->bind_param('sdi', $date, $fine, $id);
 
         return $stmt->execute();
+    }
+    public function getOverdue(): array
+    {
+        $today = date('Y-m-d');
+        $sql = 'SELECT * FROM borrow_records WHERE due_date < ? AND status = "borrowed"';
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param('s', $today);
+        $stmt->execute();
+
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 }

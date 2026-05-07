@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Library\Repository;
@@ -10,6 +11,18 @@ use App\Library\Entity\Book;
 class BookRepository
 {
     private mysqli $conn;
+
+    public function search(string $keyword): array
+    {
+        $stmt = $this->conn->prepare(
+            'SELECT * FROM books WHERE title LIKE ? OR author LIKE ?'
+        );
+        $kw = '%' . $keyword . '%';
+        $stmt->bind_param('ss', $kw, $kw);
+        $stmt->execute();
+
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
 
     public function __construct()
     {
