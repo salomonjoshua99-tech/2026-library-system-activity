@@ -1,16 +1,26 @@
 <?php
-class DatabaseConnection {
-    private $host = "localhost";
-    private $user = "root";
-    private $pass = "";
-    private $dbname = "library_db";
+declare(strict_types=1);
 
-    public function connect() {
-        $conn = new mysqli($this->host, $this->user, $this->pass, $this->dbname);
+namespace App\Library\Config;
+
+use mysqli;
+use App\Library\Exception\DatabaseException;
+
+class DatabaseConnection
+{
+    public static function connect(): mysqli
+    {
+        $conn = new mysqli(
+            DatabaseConfig::HOST,
+            DatabaseConfig::USER,
+            DatabaseConfig::PASS,
+            DatabaseConfig::DB
+        );
+
         if ($conn->connect_error) {
-            die("Database connection failed");
+            throw new DatabaseException('Database connection failed');
         }
+
         return $conn;
     }
 }
-?>

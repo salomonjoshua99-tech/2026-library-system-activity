@@ -1,38 +1,46 @@
 <?php
-require_once "BookRepository.php";
-require_once "LibraryService.php";
-require_once "LibraryReport.php";
-require_once "HtmlRenderer.php";
+declare(strict_types=1);
+
+use App\Library\Repository\BookRepository;
+use App\Library\Service\LibraryService;
+use App\Library\Service\LibraryReport;
+use App\Library\View\HtmlRenderer;
+
+require_once __DIR__ . '/../src/Repository/BookRepository.php';
+require_once __DIR__ . '/../src/Service/LibraryService.php';
+require_once __DIR__ . '/../src/Service/LibraryReport.php';
+require_once __DIR__ . '/../src/View/HtmlRenderer.php';
 
 $bookRepo = new BookRepository();
 $service = new LibraryService();
 $report = new LibraryReport();
 
-$action = $_GET['act'] ?? '';
+$act = $_GET['act'] ?? '';
 
-if ($action == "add") {
-    $book = new Book($_POST['t'], $_POST['a'], $_POST['y'], $_POST['g']);
-    $bookRepo->add($book);
-    echo "Book added!";
-}
-
-elseif ($action == "list") {
+if ($act === 'list') {
     $books = $bookRepo->getAll();
-    HtmlRenderer::renderBooks($books);
+
+    HtmlRenderer::render('book_list', ['books' => $books]);
 }
 
-elseif ($action == "borrow") {
-    $service->borrowBook($_POST['sid'], $_POST['bid'], $_POST['days']);
-    echo "Book borrowed!";
+elseif ($act === 'borrow_form') {
+    HtmlRenderer::render('borrow_form');
 }
 
-elseif ($action == "return") {
-    $fine = $service->returnBook($_POST['rid']);
-    echo "Returned. Fine: $fine";
+elseif ($act === 'borrow') {
+    $service->borrowBook((int) $_POST['sid'], (int) $_POST['bid'], (int) $_POST['days']);
+
+    echo 'Borrowed successfully';
 }
 
-elseif ($action == "report") {
+elseif ($act === 'return') {
+    $fine = $service->returnBook((int) $_POST['rid']);
+
+    echo 'Fine: ' . $fine;
+}
+
+elseif ($act === 'report') {
     $stats = $report->getStats();
-    HtmlRenderer::renderReport($stats);
+
+    HtmlRenderer::render('report_view', ['stats' => $stats]);
 }
-?>

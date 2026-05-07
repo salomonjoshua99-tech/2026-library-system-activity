@@ -1,33 +1,38 @@
 <?php
-require_once "DatabaseConnection.php";
-require_once "Book.php";
+declare(strict_types=1);
 
-class BookRepository {
-    private $conn;
+namespace App\Library\Repository;
 
-    public function __construct() {
-        $db = new DatabaseConnection();
-        $this->conn = $db->connect();
+use mysqli;
+use App\Library\Config\DatabaseConnection;
+use App\Library\Entity\Book;
+
+class BookRepository
+{
+    private mysqli $conn;
+
+    public function __construct()
+    {
+        $this->conn = DatabaseConnection::connect();
     }
 
-    public function add(Book $book) {
-        $stmt = $this->conn->prepare("INSERT INTO books(title, author, year, genre) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssis", $book->title, $book->author, $book->year, $book->genre);
+    public function add(Book $book): int
+    {
+        $stmt = $this->conn->prepare(
+            'INSERT INTO books (title, author, year, genre) VALUES (?, ?, ?, ?)'
+        );
+
+        $stmt->bind_param('ssis', $book->title, $book->author, $book->year, $book->genre);
         $stmt->execute();
+
         return $this->conn->insert_id;
     }
 
-    public function getAll() {
-        $result = $this->conn->query("SELECT * FROM books");
+
+    public function getAll(): array
+    {
+        $result = $this->conn->query('SELECT * FROM books');
+
         return $result->fetch_all(MYSQLI_ASSOC);
     }
-
-    public function search($keyword) {
-        $stmt = $this->conn->prepare("SELECT * FROM books WHERE title LIKE ? OR author LIKE ?");
-        $kw = "%$keyword%";
-        $stmt->bind_param("ss", $kw, $kw);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    }
 }
-?>

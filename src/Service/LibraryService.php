@@ -1,31 +1,40 @@
 <?php
-require_once "BorrowRepository.php";
+declare(strict_types=1);
 
-class LibraryService {
-    private $borrowRepo;
-    private $fineRate = 5;
+namespace App\Library\Service;
 
-    public function __construct() {
+use App\Library\Repository\BorrowRepository;
+use App\Library\Config\LibraryConfig;
+
+class LibraryService
+{
+    private BorrowRepository $borrowRepo;
+
+    public function __construct()
+    {
         $this->borrowRepo = new BorrowRepository();
     }
 
-    public function borrowBook($student_id, $book_id, $days) {
-        $borrow_date = date('Y-m-d');
-        $due_date = date('Y-m-d', strtotime("+$days days"));
-        return $this->borrowRepo->borrow($student_id, $book_id, $borrow_date, $due_date);
+    public function borrowBook(int $sid, int $bid, int $days): bool
+    {
+        $borrowDate = date('Y-m-d');
+        $dueDate = date('Y-m-d', strtotime('+' . $days . ' days'));
+
+        return $this->borrowRepo->borrow($sid, $bid, $borrowDate, $dueDate);
     }
 
-    public function returnBook($record_id) {
-        $record = $this->borrowRepo->getRecord($record_id);
+    public function returnBook(int $rid): float
+    {
+        $record = $this->borrowRepo->get($rid);
 
         $due = strtotime($record['due_date']);
         $today = strtotime(date('Y-m-d'));
 
         $daysLate = max(0, ($today - $due) / 86400);
-        $fine = $daysLate * $this->fineRate;
+        $fine = $daysLate * LibraryConfig::FINE_RATE;
 
-        $this->borrowRepo->returnBook($record_id, date('Y-m-d'), $fine);
+        $this->borrowRepo->returnBook($rid, date('Y-m-d'), $fine);
+
         return $fine;
     }
 }
-?>

@@ -1,17 +1,16 @@
 <?php
-class BorrowRecord {
-    public $id;
-    public $student_id;
-    public $book_id;
-    public $borrow_date;
-    public $due_date;
-    public $return_date;
-    public $fine;
-    public $status;
+declare(strict_types=1);
 
-    public function __construct($student_id, $book_id) {
-        $this->student_id = $student_id;
-        $this->book_id = $book_id;
-    }
+namespace App\Library\Entity;
+
+class BorrowRecord
+{
+    public ?int $id = null;
+    public int $studentId;
+    public int $bookId;
+    public string $borrowDate;
+    public string $dueDate;
+    public ?string $returnDate = null;
+    public float $fine = 0.0;
+    public string $status = 'borrowed';
 }
-?>
