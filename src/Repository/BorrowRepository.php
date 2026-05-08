@@ -4,6 +4,16 @@ declare(strict_types=1);
 
 namespace App\Library\Repository;
 
+/**
+ * Borrow Repository
+ *
+ * Handles database operations for borrowing records including
+ * creating new borrows, updating returns, and tracking overdue books.
+ *
+ * @author Joshua Salomon
+ * @since 2026-05-08
+ */
+
 use mysqli;
 use RuntimeException;
 use InvalidArgumentException;

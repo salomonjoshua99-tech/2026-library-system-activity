@@ -4,6 +4,17 @@ declare(strict_types=1);
 
 namespace App\Library\Entity;
 
+/**
+ * Book Entity
+ *
+ * Represents a book in the library system with properties for
+ * title, author, publication year, and genre. Includes input
+ * validation to ensure data integrity.
+ *
+ * @author Joshua Salomon
+ * @since 2026-05-08
+ */
+
 use InvalidArgumentException;
 
 class Book

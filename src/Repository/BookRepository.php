@@ -4,6 +4,16 @@ declare(strict_types=1);
 
 namespace App\Library\Repository;
 
+/**
+ * Book Repository
+ *
+ * Manages database operations for Book entities using prepared
+ * statements to prevent SQL injection and ensure data consistency.
+ *
+ * @author Joshua Salomon
+ * @since 2026-05-08
+ */
+
 use mysqli;
 use RuntimeException;
 use App\Library\Config\DatabaseConnection;

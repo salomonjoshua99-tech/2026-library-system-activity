@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Library\Repository\BookRepository;
@@ -6,6 +7,16 @@ use App\Library\Service\LibraryService;
 use App\Library\Service\LibraryReport;
 use App\Library\View\HtmlRenderer;
 
+/**
+ * Library System Entry Point
+ *
+ * Main application controller that handles HTTP requests and routes
+ * them to appropriate library operations including book listing,
+ * borrowing, returns, and report generation.
+ *
+ * @author Joshua Salomon
+ * @since 2026-05-08
+ */
 require_once __DIR__ . '/../src/Repository/BookRepository.php';
 require_once __DIR__ . '/../src/Service/LibraryService.php';
 require_once __DIR__ . '/../src/Service/LibraryReport.php';
@@ -21,25 +32,17 @@ if ($act === 'list') {
     $books = $bookRepo->getAll();
 
     HtmlRenderer::render('book_list', ['books' => $books]);
-}
-
-elseif ($act === 'borrow_form') {
+} elseif ($act === 'borrow_form') {
     HtmlRenderer::render('borrow_form');
-}
-
-elseif ($act === 'borrow') {
+} elseif ($act === 'borrow') {
     $service->borrowBook((int) $_POST['sid'], (int) $_POST['bid'], (int) $_POST['days']);
 
     echo 'Borrowed successfully';
-}
-
-elseif ($act === 'return') {
+} elseif ($act === 'return') {
     $fine = $service->returnBook((int) $_POST['rid']);
 
     echo 'Fine: ' . $fine;
-}
-
-elseif ($act === 'report') {
+} elseif ($act === 'report') {
     $stats = $report->getStats();
 
     HtmlRenderer::render('report_view', ['stats' => $stats]);
