@@ -59,3 +59,7 @@ dist/
 # Configuration files with secrets
 config.local.php
 .env.production
+
+
+.phpdoc/
+vendor/

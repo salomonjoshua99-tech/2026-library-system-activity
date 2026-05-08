@@ -4,7 +4,7 @@ A refactored OOP PHP application for managing library books, borrow records,
 and overdue fines. Built following PSR-12 coding standards.
 
 ## Author
-- Juan Dela Cruz
+- Joshua Salomon
 
 ## Requirements
 - PHP 8.0 or higher
