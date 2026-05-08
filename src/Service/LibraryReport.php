@@ -44,18 +44,22 @@ class LibraryReport
      */
     public function getStats(): array
     {
+        // Execute count queries to get library statistics
         $stmt1 = $this->conn->prepare('SELECT COUNT(*) as total FROM books');
         $stmt1->execute();
         $books = $stmt1->get_result()->fetch_assoc()['total'];
 
+        // Calculate borrowed books count
         $stmt2 = $this->conn->prepare('SELECT COUNT(*) as total FROM borrow_records WHERE status = "borrowed"');
         $stmt2->execute();
         $borrowed = $stmt2->get_result()->fetch_assoc()['total'];
 
+        // Calculate returned books count
         $stmt3 = $this->conn->prepare('SELECT COUNT(*) as total FROM borrow_records WHERE status = "returned"');
         $stmt3->execute();
         $returned = $stmt3->get_result()->fetch_assoc()['total'];
 
+        // Calculate total fines collected
         $stmt4 = $this->conn->prepare('SELECT SUM(fine_amount) as total FROM borrow_records');
         $stmt4->execute();
         $fines = $stmt4->get_result()->fetch_assoc()['total'];

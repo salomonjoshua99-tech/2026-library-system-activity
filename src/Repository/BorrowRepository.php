@@ -126,6 +126,7 @@ class BorrowRepository
      */
     public function getOverdue(): array
     {
+        // Get today's date for overdue book comparison
         $today = date('Y-m-d');
         $sql = 'SELECT * FROM borrow_records WHERE due_date < ? AND status = "borrowed"';
         $stmt = $this->conn->prepare($sql);

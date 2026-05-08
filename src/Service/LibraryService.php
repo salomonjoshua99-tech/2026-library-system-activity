@@ -95,11 +95,12 @@ class LibraryService
             throw new RuntimeException('Book already returned for record: ' . $recordid);
         }
 
-        $due = strtotime($record['due_date']);
-        $today = strtotime(date('Y-m-d'));
+        // Calculate the difference in days between due date and today
+        $interval = $today->diff($dueDate);
+        $daysOverdue = (int) $interval->format('%r%a');
 
-        $daysLate = max(0, ($today - $due) / 86400);
-        $fine = $daysLate * LibraryConfig::FINE_RATE;
+        // Apply fine only if the book is actually overdue
+        $fine = $daysOverdue > 0 ? $daysOverdue * LibraryConfig::FINE_RATE : 0.0;
 
         $this->borrowRepo->returnBook($recordid, date('Y-m-d'), $fine);
 
