@@ -19,10 +19,29 @@ use InvalidArgumentException;
 
 class Book
 {
+    /**
+     * @var int|null The unique identifier for the book
+     */
     public ?int $id;
+
+    /**
+     * @var string The title of the book
+     */
     public string $title;
+
+    /**
+     * @var string The author name of the book
+     */
     public string $author;
+
+    /**
+     * @var int The publication year of the book
+     */
     public int $year;
+
+    /**
+     * @var string The genre category of the book
+     */
     public string $genre;
     /**
      * Creates a new Book entity with validation.

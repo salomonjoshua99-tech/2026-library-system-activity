@@ -21,6 +21,9 @@ use App\Library\Config\DatabaseConnection;
 
 class BorrowRepository
 {
+    /**
+     * @var mysqli The active database connection instance
+     */
     private mysqli $conn;
     /**
      * Initializes BorrowRepository with database connection.

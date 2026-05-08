@@ -15,6 +15,13 @@ namespace App\Library\Entity;
  */
 class Student
 {
+    /**
+     * @var int|null The unique identifier for the student
+     */
     public ?int $id = null;
+
+    /**
+     * @var string The full name of the student
+     */
     public string $name;
 }

@@ -22,6 +22,9 @@ use App\Library\Config\LibraryConfig;
 
 class LibraryService
 {
+    /**
+     * @var BorrowRepository The repository for managing borrow records
+     */
     private BorrowRepository $borrowRepo;
     /**
      * Initializes LibraryService with BorrowRepository dependency.

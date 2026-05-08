@@ -21,6 +21,9 @@ use App\Library\Entity\Book;
 
 class BookRepository
 {
+    /**
+     * @var mysqli The active database connection instance
+     */
     private mysqli $conn;
     /**
      * Searches for books by title or author keyword.

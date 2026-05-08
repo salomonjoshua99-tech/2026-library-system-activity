@@ -19,6 +19,9 @@ use App\Library\Config\DatabaseConnection;
 
 class LibraryReport
 {
+    /**
+     * @var mysqli The active database connection instance
+     */
     private mysqli $conn;
     /**
      * Initializes LibraryReport with database connection.
