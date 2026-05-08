@@ -15,6 +15,17 @@ namespace App\Library\View;
  */
 class HtmlRenderer
 {
+    /**
+     * Renders a view template with provided data.
+     *
+     * Extracts data variables, validates view file exists,
+     * and includes the template for rendering.
+     *
+     * @param string $view The view filename without extension
+     * @param array $data Associative array of data to pass to view
+     * @return void
+     * @throws \Exception If view file not found
+     */
     public static function render(string $view, array $data = []): void
     {
         extract($data);

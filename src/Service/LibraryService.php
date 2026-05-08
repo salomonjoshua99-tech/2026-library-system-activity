@@ -23,12 +23,31 @@ use App\Library\Config\LibraryConfig;
 class LibraryService
 {
     private BorrowRepository $borrowRepo;
-
+    /**
+     * Initializes LibraryService with BorrowRepository dependency.
+     *
+     * Creates a new BorrowRepository instance for handling
+     * borrowing operations and fine calculations.
+     *
+     * @throws RuntimeException If BorrowRepository instantiation fails
+     */
     public function __construct()
     {
         $this->borrowRepo = new BorrowRepository();
     }
-
+    /**
+     * Borrows a book for a student with validation.
+     *
+     * Validates student ID, book ID, and borrowing period,
+     * calculates due date, and creates borrow record.
+     *
+     * @param int $studentid The ID of the student borrowing the book
+     * @param int $bookid The ID of the book being borrowed
+     * @param int $days The borrowing period in days (1-30)
+     * @return bool True if book was successfully borrowed
+     * @throws InvalidArgumentException If student ID, book ID, or days are invalid
+     * @throws RuntimeException If borrow record creation fails
+     */
     public function borrowBook(int $studentid, int $bookid, int $days): bool
     {
         if ($studentid <= 0) {
@@ -46,7 +65,17 @@ class LibraryService
 
         return $this->borrowRepo->borrow($studentid, $bookid, $borrowDate, $dueDate);
     }
-
+    /**
+     * Returns a borrowed book and calculates fine.
+     *
+     * Validates record ID, checks if book is already returned,
+     * calculates days late, and applies fine rate.
+     *
+     * @param int $recordid The ID of the borrow record to return
+     * @return float The calculated fine amount (0.00 if returned on time)
+     * @throws InvalidArgumentException If record ID is invalid
+     * @throws RuntimeException If record not found or already returned
+     */
     public function returnBook(int $recordid): float
     {
         if ($recordid <= 0) {

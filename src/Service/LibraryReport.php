@@ -20,12 +20,25 @@ use App\Library\Config\DatabaseConnection;
 class LibraryReport
 {
     private mysqli $conn;
-
+    /**
+     * Initializes LibraryReport with database connection.
+     *
+     * Establishes connection for statistical report generation.
+     *
+     * @throws RuntimeException If database connection fails
+     */
     public function __construct()
     {
         $this->conn = DatabaseConnection::connect();
     }
-
+    /**
+     * Generates library statistics report.
+     *
+     * Calculates total books, borrowed/returned counts, and fine totals.
+     *
+     * @return array Associative array with keys: books, borrowed, returned, fines
+     * @throws RuntimeException If any database query fails
+     */
     public function getStats(): array
     {
         $stmt1 = $this->conn->prepare('SELECT COUNT(*) as total FROM books');

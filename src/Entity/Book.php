@@ -24,7 +24,19 @@ class Book
     public string $author;
     public int $year;
     public string $genre;
-
+    /**
+     * Creates a new Book entity with validation.
+     *
+     * Validates title, author, year, and genre before assigning
+     * properties to ensure data integrity.
+     *
+     * @param string $title The book title (cannot be empty)
+     * @param string $author The book author (cannot be empty)
+     * @param int $year Publication year (1000 to current year)
+     * @param string $genre The book genre (cannot be empty)
+     * @param int|null $id Optional existing book ID
+     * @throws InvalidArgumentException If any field is invalid
+     */
     public function __construct(string $title, string $author, int $year, string $genre, ?int $id = null)
     {
         if (empty($title)) {
